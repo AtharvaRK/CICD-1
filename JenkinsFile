@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'Git', defaultValue: 'https://github.com/AtharvaRK/devop-ud1', description: 'Enter your git Url')
+    }
+
+    stages {
+
+        stage('Clean Folder') {
+            steps {
+                cleanWs()
+                sh 'pwd'
+                git branch: 'main', url: "${params.Git}"
+               
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps{
+                script{
+                    def scannerHome = tool 'sonar';
+                    withSonarQubeEnv(installationName:'sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=test "
+                    }
+                }
+            }
+        }
+    }
+}
