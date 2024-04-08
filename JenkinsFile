@@ -3,7 +3,9 @@ pipeline {
 
     parameters {
         string(name: 'Git', defaultValue: 'https://github.com/AtharvaRK/devop-ud1', description: 'Enter your git Url')
+        string(name: 'tag', defaultValue: '08042024')
     }
+    
 
     stages {
 
@@ -15,7 +17,8 @@ pipeline {
                
             }
         }
-
+        
+               
         stage('SonarQube Analysis') {
             steps{
                 script{
@@ -27,5 +30,18 @@ pipeline {
                 }
             }
         }
+        
+        stage('Docker') {
+            steps {
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        sh'docker build -t arkyy21/jenk1:${tag} .'
+                        sh'docker push arkyy21/jenk1:${tag} '
+                        sh'docker rmi arkyy21/jenk1:${tag} '
+                    }
+                }
+            }
+        }
     }
+    
 }
