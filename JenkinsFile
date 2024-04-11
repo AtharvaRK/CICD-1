@@ -35,7 +35,10 @@ pipeline {
                 }
             }
         }
-        
+
+
+//sonarqube-webhook need to be added in as webhook for QG
+
         stage('QG') {
             steps {
                 waitForQualityGate abortPipeline: false, credentialsId: 'sonar'
