@@ -18,7 +18,12 @@ pipeline {
             }
         }
         
-               
+        stage('Hello') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+        
         stage('SonarQube Analysis') {
             steps{
                 script{
@@ -31,6 +36,13 @@ pipeline {
             }
         }
         
+        stage('QG') {
+            steps {
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar'
+            }
+        }
+        
+
         stage('Docker') {
             steps {
                 script{
@@ -42,6 +54,24 @@ pipeline {
                 }
             }
         }
+        
+        stage('FS SCAN') {
+            steps {
+                sh'docker run --name=fsscan aquasec/trivy fs . > fs.txt'
+                sh'docker run --name=imscan aquasec/trivy image arkyy21/jenk1:${tag} > image.txt'
+                sh'docker rm fcscan'
+                sh'docker rm imscan'
+            }
+        }
+        
+        stage('FS SCAN send') {
+            steps {
+                emailext attachmentsPattern: 'fs.txt', body: '', subject: 'Jenkins Scan Result', to: 'arkyyy21@gmail.com'
+            }
+        }
+        
+        
+       
     }
     
 }
