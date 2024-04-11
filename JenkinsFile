@@ -17,12 +17,7 @@ pipeline {
                
             }
         }
-        
-        stage('Hello') {
-            steps {
-                sh 'docker ps'
-            }
-        }
+
         
         stage('SonarQube Analysis') {
             steps{
