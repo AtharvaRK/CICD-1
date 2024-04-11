@@ -17,7 +17,12 @@ pipeline {
                
             }
         }
-
+        
+        stage('Hello') {
+            steps {
+                sh 'docker ps'
+            }
+        }
         
         stage('SonarQube Analysis') {
             steps{
@@ -54,7 +59,7 @@ pipeline {
             steps {
                 sh'docker run --name=fsscan aquasec/trivy fs . > fs.txt'
                 sh'docker run --name=imscan aquasec/trivy image arkyy21/jenk1:${tag} > image.txt'
-                sh'docker rm fcscan'
+                sh'docker rm fsscan'
                 sh'docker rm imscan'
             }
         }
@@ -66,7 +71,6 @@ pipeline {
         }
         
         
-       
     }
     
 }
