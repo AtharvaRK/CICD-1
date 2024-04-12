@@ -36,9 +36,9 @@ pipeline {
             }
         }
 
-
 //sonarqube-webhook need to be added in as webhook for QG
 
+ 
         stage('QG') {
             steps {
                 waitForQualityGate abortPipeline: false, credentialsId: 'sonar'
@@ -69,9 +69,16 @@ pipeline {
         
         stage('FS SCAN send') {
             steps {
-                emailext attachmentsPattern: 'fs.txt', body: '', subject: 'Jenkins Scan Result', to: 'arkyyy21@gmail.com'
+                emailext attachmentsPattern: 'fs.txt,image.txt', body: '', subject: 'Jenkins Scan Result', to: 'arkyyy21@gmail.com'
             }
         }
+        
+        
+        
+        
+        
+        
+        
         
         
     }
